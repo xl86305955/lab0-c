@@ -68,6 +68,10 @@ bool q_insert_head(queue_t *q, char *s)
     newh = malloc(sizeof(list_ele_t));
     if (newh != NULL) {
         newh->value = strdup(s);
+        if (newh->value == NULL) {
+            free(newh);
+            return false;
+        }
         /* If the new node be the first node of queue */
         if (q->head == NULL && q->tail == NULL) {
             newh->next = NULL;
@@ -104,13 +108,20 @@ bool q_insert_tail(queue_t *q, char *s)
     newt = malloc(sizeof(*newt));
     if (newt != NULL) {
         newt->value = strdup(s);
+        if (newt->value == NULL) {
+            free(newt);
+            return false;
+        }
         /* if newt be the first node */
         if (q->head == NULL && q->tail == NULL) {
             q->head = newt;
+            q->tail = newt;
+            newt->next = NULL;
+        } else {
+            q->tail->next = newt;
+            newt->next = NULL;
+            q->tail = newt;
         }
-        newt->next = NULL;
-        q->tail->next = newt;
-        q->tail = newt;
         q->size += 1;
         return true;
     }
@@ -134,16 +145,17 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
     if (q == NULL)
         return false;
-    bufsize = q->size;
-    if (q->head == NULL && q->tail == NULL)
+    if ((q->head == NULL) && (q->tail == NULL))
         return false;
-    list_ele_t *tmp;
-    tmp = q->head;
-    q->head = q->head->next;
-    strcpy(sp, tmp->value);
-    free(tmp);
-    q->size -= 1;
+    /*    list_ele_t *tmp;
+        tmp = malloc(sizeof(*tmp));
+        tmp = q->head;
+        q->head = q->head->next;
+        strcpy(sp, tmp->value);
+        free(tmp);
+        q->size -= 1;*/
     return true;
+
     /* You need to fix up this code. */
 }
 
@@ -170,5 +182,7 @@ int q_size(queue_t *q)
  */
 void q_reverse(queue_t *q)
 {
+    if (q == NULL || ((q->head == NULL) && (q->tail == NULL)))
+        return;
     /* You need to write the code for this function */
 }
