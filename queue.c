@@ -147,13 +147,19 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
         return false;
     if ((q->head == NULL) && (q->tail == NULL))
         return false;
-    /*    list_ele_t *tmp;
-        tmp = malloc(sizeof(*tmp));
-        tmp = q->head;
-        q->head = q->head->next;
-        strcpy(sp, tmp->value);
-        free(tmp);
-        q->size -= 1;*/
+    if (q->size == 0)
+        return false;
+    if (sp != NULL) {
+        strncpy(sp, q->head->value, bufsize - 1);
+        sp[bufsize - 1] = '\0';
+    }
+    list_ele_t *tmp;
+    // tmp = malloc(sizeof(*tmp));
+    tmp = q->head;
+    q->head = q->head->next;
+    strcpy(sp, tmp->value);
+    free(tmp);
+    q->size -= 1;
     return true;
 
     /* You need to fix up this code. */
