@@ -25,6 +25,8 @@
 queue_t *q_new()
 {
     queue_t *q = malloc(sizeof(queue_t));
+    if (q == NULL)
+        return false;
     /* What if malloc returned NULL? */
     q->head = NULL;
     q->tail = NULL;
@@ -35,6 +37,14 @@ queue_t *q_new()
 /* Free all storage used by queue */
 void q_free(queue_t *q)
 {
+    if (q == NULL)
+        return;
+    while (q->head != NULL) {
+        list_ele_t *tmp;
+        tmp = q->head;
+        q->head = q->head->next;
+        free(tmp);
+    }
     /* How about freeing the list elements and the strings? */
     /* Free queue structure */
     free(q);
@@ -94,6 +104,7 @@ bool q_insert_tail(queue_t *q, char *s)
     newt = malloc(sizeof(*newt));
     if (newt != NULL) {
         newt->value = strdup(s);
+        /* if newt be the first node */
         if (q->head == NULL && q->tail == NULL) {
             q->head = newt;
         }
@@ -121,9 +132,19 @@ bool q_insert_tail(queue_t *q, char *s)
 */
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
-    /* You need to fix up this code. */
+    if (q == NULL)
+        return false;
+    bufsize = q->size;
+    if (q->head == NULL && q->tail == NULL)
+        return false;
+    list_ele_t *tmp;
+    tmp = q->head;
     q->head = q->head->next;
+    strcpy(sp, tmp->value);
+    free(tmp);
+    q->size -= 1;
     return true;
+    /* You need to fix up this code. */
 }
 
 /*
