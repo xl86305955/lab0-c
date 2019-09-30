@@ -153,8 +153,8 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
  */
 int q_size(queue_t *q)
 {
-    if (q == NULL) {
-        return false;
+    if (q == NULL || q->head == NULL) {
+        return 0;
     } else
         /* You need to write the code for this function */
         /* Remember: It should operate in O(1) time */
