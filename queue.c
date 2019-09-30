@@ -59,7 +59,7 @@ bool q_insert_head(queue_t *q, char *s)
     if (newh != NULL) {
         newh->value = strdup(s);
         /* If the new node be the first node of queue */
-        if (q->head == NULL || q->tail == NULL) {
+        if (q->head == NULL && q->tail == NULL) {
             newh->next = NULL;
             q->tail = newh;
         } else {
@@ -87,9 +87,28 @@ bool q_insert_head(queue_t *q, char *s)
  */
 bool q_insert_tail(queue_t *q, char *s)
 {
+    /* Insertion denied while queue was empty */
+    if (q == NULL)
+        return false;
+    list_ele_t *newt;
+    newt = malloc(sizeof(*newt));
+    if (newt != NULL) {
+        newt->value = strdup(s);
+        if (q->head == NULL && q->tail == NULL) {
+            q->head = newt;
+        }
+        newt->next = NULL;
+        q->tail->next = newt;
+        q->tail = newt;
+        q->size += 1;
+        return true;
+    }
+    /* Malloc failed */
+    else {
+        return false;
+    }
     /* You need to write the complete code for this function */
     /* Remember: It should operate in O(1) time */
-    return false;
 }
 
 /*
