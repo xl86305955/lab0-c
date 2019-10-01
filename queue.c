@@ -116,13 +116,11 @@ bool q_insert_tail(queue_t *q, char *s)
         /* if newt be the first node */
         if (q->head == NULL && q->tail == NULL) {
             q->head = newt;
-            q->tail = newt;
-            newt->next = NULL;
         } else {
             q->tail->next = newt;
-            newt->next = NULL;
-            q->tail = newt;
         }
+        newt->next = NULL;
+        q->tail = newt;
         q->size += 1;
         return true;
     }
